@@ -20,12 +20,14 @@ class FlappyInterface(ModelInterface):
 		if log_events:
 			for event_name in FlappyGame.get_events():
 				game.events.add(event_name, self.event_handler)
+
+			
 		
 	def step(self, action):
 		self.prev_state = self.get_state()
 
 		sum_reward = 0
-		for i in xrange(0, 10):
+		for i in range(0, 10):
 			status = self.game.step(action if i == 0 else FlappyGame.NONE)
 			
 			if status == FlappyGame.QUIT:
@@ -56,9 +58,9 @@ class FlappyInterface(ModelInterface):
 		- Vertical distance between bird and nearest pipe (-height / 10 to height / 10)
 		- Bird velocity (-10 / 5 to 20 / 5)
 		'''
-		for horizontal_distance in xrange(0, (300 / 10 + 1) + 1):
-			for vertical_distance in xrange(-self.game.height / 10, (self.game.height / 10) + 1):
-				for velocity in xrange(-10 / 5, (20 / 5) + 1):
+		for horizontal_distance in range(0, (300 / 10 + 1) + 1):
+			for vertical_distance in range(-self.game.height / 10, (self.game.height / 10) + 1):
+				for velocity in range(-10 / 5, (20 / 5) + 1):
 					states.append((horizontal_distance, vertical_distance, velocity))
 
 		return states
@@ -82,6 +84,11 @@ class FlappyInterface(ModelInterface):
 	def event_handler(self, event_name, *values):
 		if event_name == FlappyGame.GAME_ENDED:
 			print("Score: %d" % values[0]["final_score"])
+
+	def discretize(self, state):
+		return self.game.discretize(state)		
+
+
 
 def interactive(game):
 	# interactive mode

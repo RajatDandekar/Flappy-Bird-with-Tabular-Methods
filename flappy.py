@@ -47,10 +47,10 @@ class FlappyGame:
 		self.next_pipe_x_location = self.pipe_start_offset + self.pipe_count * self.pipe_distance
 		self.bird = Bird(self.height / 2, self.gravity)
 		self.pipes = deque()
-		self.bird_path = deque([(self.progress, self.bird.y)], camera_offset / self.horizontal_speed)
+		self.bird_path = deque([(self.progress, self.bird.y)], int(camera_offset / self.horizontal_speed))
 
 		# generate pipes
-		for i in xrange(0, self.pipe_count):
+		for i in range(0, self.pipe_count):
 			self.pipes.append(Pipe.generate_pipe(self.pipe_start_offset + i * self.pipe_distance, self.height))
 
 	def restart(self):
@@ -157,6 +157,14 @@ class FlappyGame:
 				continue
 			else:
 				return pipe
+
+	def discretize(self, state):
+		return (
+            int(state[0]),
+            int(state[1]),
+            int(state[2])
+        )
+			
 
 	@staticmethod
 	def get_actions():

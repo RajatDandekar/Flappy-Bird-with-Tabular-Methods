@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 
 import signal
-import cPickle as pickle
+import pickle
 import os
 import random
 from datetime import datetime
@@ -90,12 +90,14 @@ class Trainer:
 			state = self.model.get_state()
 			action = self.f_function(state)
 			reward = self.model.step(action)
-			new_state = self.model.get_state()
+			new_state = self.model.discretize(self.model.get_state())
+
 
 			if reward is ModelInterface.REQUEST_TERMINATE:
 				# terminate
 				break
 
+			state = self.model.discretize(state)
 			q = self.qtable[(action, state)]
 			max_q_prime = better_max(self.model.get_actions(), lambda action: self.qtable[(action, new_state)])["value"]
 
@@ -136,6 +138,7 @@ class Trainer:
 		Choose action based on an epsilon greedy approach
 		return action selected
 		'''
+		state = self.model.discretize(state)
 		action_selected = None
 
 		if random.random() < self.epsilon:
